@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { browserHistory } from 'react-router';
+import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const CreateExercises = props => {
@@ -13,10 +14,15 @@ const CreateExercises = props => {
   });
 
   useEffect(() => {
-    setExerciseList({
-      ...exerciseList,
-      users: ['test user'],
-      username: 'test user'
+    axios.get('http://localhost:5000/users/').then(res => {
+      console.log(res);
+      if (res.data.length > 0) {
+        setExerciseList({
+          ...exerciseList,
+          users: res.data.map(user => user.username),
+          username: res.data[0].username
+        });
+      }
     });
   }, []);
 
@@ -45,8 +51,21 @@ const CreateExercises = props => {
       date: exerciseList.date
     };
     console.log(exercise);
+    axios
+      .post('http://localhost:5000/exercises/add', exercise)
+      .then(res => {
+        setExerciseList({
+          ...exerciseList,
+          username: '',
+          description: '',
+          duration: 0,
+          date: ''
+        });
+        console.log(res.data);
+      })
+      .catch(err => console.log(err));
 
-    props.history.push('/');
+    // props.history.push('/');
   };
 
   const { username, description, duration, date, users } = exerciseList;
