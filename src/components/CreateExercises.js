@@ -15,7 +15,6 @@ const CreateExercises = props => {
 
   useEffect(() => {
     axios.get('http://localhost:5000/users/').then(res => {
-      console.log(res);
       if (res.data.length > 0) {
         setExerciseList({
           ...exerciseList,
@@ -50,7 +49,6 @@ const CreateExercises = props => {
       duration: exerciseList.duration,
       date: exerciseList.date
     };
-    console.log(exercise);
     axios
       .post('http://localhost:5000/exercises/add', exercise)
       .then(res => {
@@ -61,11 +59,8 @@ const CreateExercises = props => {
           duration: 0,
           date: ''
         });
-        console.log(res.data);
       })
       .catch(err => console.log(err));
-
-    // props.history.push('/');
   };
 
   const { username, description, duration, date, users } = exerciseList;
